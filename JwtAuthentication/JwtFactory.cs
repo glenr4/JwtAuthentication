@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -7,12 +8,7 @@ namespace JwtAuthentication
 {
 	public class JwtFactory
 	{
-		public HashAlgorithm Algorithm { get; set; }
-		public string Header { get; set; }
-		public string Payload { get; set; }
-		public string Signature { get; set; }
-
-		public string Create(HashAlgorithm algorithm, byte[] privatekey, Dictionary<string, string> payload)
+		public string Create(HashAlgorithm algorithm, byte[] privateKey, Dictionary<string, string> payload)
 		{
 			var header = new Dictionary<string, string>();
 			header.Add("alg", algorithm.ToString());
@@ -21,15 +17,28 @@ namespace JwtAuthentication
 
 			var encodedPayload = this.ToJsonBase64Url(payload);
 
-			// TODO: also need to do RS256
-			var signature = Base64Url.Encode(EncodeHS256(privatekey, $"{encodedHeader}.{encodedPayload}"));
+			string signature = string.Empty;
+			if (algorithm == HashAlgorithm.RS256)
+			{
+				signature = Base64Url.Encode(EncodeHS256(privateKey, $"{encodedHeader}.{encodedPayload}"));
+			}
+			else if (algorithm == HashAlgorithm.RS256)
+			{
+				// TODO: also need to do RS256
+				throw new NotImplementedException();
+			}
 
 			return $"{encodedHeader}.{encodedPayload}.{signature}";
 		}
 
-		private byte[] EncodeHS256(byte[] privatekey, string data)
+		public void Decode(string jwt)
 		{
-			using (HMACSHA256 hs256 = new HMACSHA256(privatekey))
+			throw new NotImplementedException();
+		}
+
+		private byte[] EncodeHS256(byte[] privateKey, string data)
+		{
+			using (HMACSHA256 hs256 = new HMACSHA256(privateKey))
 			{
 				return hs256.ComputeHash(Encoding.UTF8.GetBytes(data));
 			}

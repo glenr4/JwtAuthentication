@@ -13,8 +13,6 @@ namespace ConsoleApp1
 			// Create a random key using a random number generator. This would be the
 			//  secret key shared by sender and receiver.
 			byte[] privateKey = new Byte[64];
-
-			//RNGCryptoServiceProvider is an implementation of a random number generator.
 			using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
 			{
 				// The array is now filled with cryptographically strong random bytes.
