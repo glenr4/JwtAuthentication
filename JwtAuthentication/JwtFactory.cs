@@ -22,9 +22,9 @@ namespace JwtAuthentication
 			var encodedPayload = this.ToJsonBase64Url(payload);
 
 			// TODO: also need to do RS256
-			var signature = this.EncodeHS256(privatekey, $"{encodedHeader}.{encodedPayload}");
+			var signature = Base64Url.Encode(EncodeHS256(privatekey, $"{encodedHeader}.{encodedPayload}"));
 
-			return $"{encodedHeader}.{encodedPayload}.{Base64Url.Encode(signature)}";
+			return $"{encodedHeader}.{encodedPayload}.{signature}";
 		}
 
 		private byte[] EncodeHS256(byte[] privatekey, string data)
